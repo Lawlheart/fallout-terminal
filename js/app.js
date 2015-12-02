@@ -1,29 +1,14 @@
 angular.module('FalloutConsole', [])
 
 .controller('MainController', ['$scope', function($scope) {
-	var words = [
-		'SPIES',
-		'JOINS',
-		'TIRES',
-		'TRICK',
-		'TRIED',
-		'SKIES',
-		'TERMS',
-		'THIRD',
-		'FRIES',
-		'PRICE',
-		'TRIES',
-		'TRITE',
-		'TANKS',
-		'THICK',
-		'TRIBE',
-		'TEXAS'
-	];
+	var words = [ 'SPIES', 'JOINS', 'TIRES', 'TRICK', 'TRIED', 'SKIES', 'TERMS', 'THIRD', 'FRIES', 'PRICE', 'TRIES', 'TRITE', 'TANKS', 'THICK', 'TRIBE', 'TEXAS' ];
 
 	var debugging = false;
 	function debug(message, message2) {
-		if(debugging) {
+		if(debugging && message2 !== undefined) {
 			console.log(message, message2);
+		} else if(debugging) {
+			console.log(message)
 		}
 	}
 	function findPlaces(words, difficulty, characters, margin) {
@@ -31,9 +16,10 @@ angular.module('FalloutConsole', [])
 		var placed = false;
 		var blacklist = [];
 		for(var i = 0; i < words.length; i++) {
+			debug(blacklist.sort())
 			placed = false;
 			debug('placing ' + words[i]);
-			while(!placed && blacklist.length < characters/2) {
+			while(!placed && blacklist.length < characters * 0.8) {
 				var place = Math.floor(Math.random()*(characters - difficulty));
 				//check blacklist array to make sure there isn't a word conflict
 				if(blacklist.indexOf(place) < 0) {
@@ -41,14 +27,16 @@ angular.module('FalloutConsole', [])
 					places.push([place, words[i]]);
 					placed = true;
 					//add used spaces with margin to blacklist array
-					for(var j = place - margin; j <= place + margin + difficulty; j++) {
+					for(var j = place - difficulty - margin; j <= place + margin + difficulty; j++) {
 						blacklist.push(j);
 					}
 				} else { 
 					debug('overlap conflict, rerolling');
 				}
 			}
+			debug(places)
 		}
+		debug("PLACED " + places.length + " of " + words.length + " Words")
 		return places.sort(function(a, b) { return a[0] - b[0];});
 	}
 	function generateDisplay(places, difficulty, characters) {
@@ -63,6 +51,7 @@ angular.module('FalloutConsole', [])
 				display += randomChar();
 			}
 		}
+
 		return display;
 	}
 	function randomChar() {
@@ -93,7 +82,7 @@ angular.module('FalloutConsole', [])
 			'24':'*'
 		};
 		var random = Math.floor(Math.random()*24 + 1);
-		debug(random, fillers[random.toString()]);
+		// debug(random, fillers[random.toString()]);
 		return fillers[random.toString()];
 	}
 	function renderScreen(display, lines, lineLength) {
@@ -102,7 +91,7 @@ angular.module('FalloutConsole', [])
 			screen.push(display.slice(0, lineLength));
 			display = display.slice(lineLength);
 		}
-		console.log(screen);
+		debug(screen);
 		return screen;
 	}
 	var difficulty = 5;
@@ -112,14 +101,55 @@ angular.module('FalloutConsole', [])
 	var margin = 2;
 
 	var places = findPlaces(words, difficulty, characters, 2);
-
-	var display = generateDisplay(places, difficulty, characters);
-
+	debug(places)
+	display = generateDisplay(places, difficulty, characters);
+	debug(display)
 	$scope.screen = renderScreen(display, lines, lineLength);
-  $scope.left = $scope.screen.slice(0,13);
-  $scope.right = $scope.screen.slice(13,26);
+	debug("screen length: ", $scope.screen.length);
+  $scope.left = $scope.screen.slice(0,17);
+  $scope.right = $scope.screen.slice(17,34);
   $scope.attempts = 4;
   $scope.boxes = [1,2,3,4];
   $scope.sidebar = []
-  $scope.selection ='TEST'
+  $scope.selection ='TEST';
+  $scope.number = 0;
+
+  function changeSelection(num) {
+  	$('.selected').removeClass('selected');
+  	var selected = $('.code-line pre.data').eq(num);
+	  selected.addClass('selected');
+	  $('#selection').html(">" + selected.html())
+  }
+
+  $(document).ready(function() {
+  	changeSelection($scope.number)
+  });
+
+  $('body').keydown(function(e) {
+  	debug('keypress');
+  	e.preventDefault();
+  	var num = $scope.number
+  	if(e.keyCode === 39 && num < 407) {
+  		debug('keypress right');
+  		//checks if end of row to move to other collumn
+  		if(num < 204 && (num + 1) % 12 === 0 ) {
+  			$scope.number += 193;
+  		} else {
+	  		$scope.number += 1;
+  		}
+  	} else if(e.keyCode === 37 && num > 0) {
+  		debug('keypress left');  		
+  		//checks if end of row to move to other collumn
+  		if(num > 203 && (num + 1) % 12 === 1 ) {
+  			$scope.number -= 193;
+  		} else {
+	  		$scope.number -= 1;
+  		}
+  	} else if(e.keyCode === 38 && num > 11) {
+  		$scope.number -= 12;
+  	} else if(e.keyCode === 40  && num < 396) {
+  		$scope.number += 12;
+  	}
+  	changeSelection($scope.number);
+  });
 }]);

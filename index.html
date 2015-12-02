@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Fallout Terminal</title>
-	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" href="css/animate.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body ng-app="FalloutConsole">
 	<main ng-controller="MainController">
@@ -16,21 +17,28 @@
 			</div>
 			<div id="terminal-screen">
 			  <div id="terminal-left">
-			    <pre ng-repeat="line in left" class="code-line">0xF000 {{line}}</pre>
+			    <span ng-repeat="line in left" class="code-line">
+						<pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
+			    	<br>
+			    </span>
 			  </div>
 			  <div id="terminal-right">
-			  <pre ng-repeat="line in right" class="code-line">0xF000 {{line}}</pre>
+			    <span ng-repeat="line in right" class="code-line">
+						<pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
+			    	<br>
+			    </span>
 			  </div>
 			</div>
 			<div id="terminal-sidebar">
 				<div id="terminal-history">
 					<pre ng-repeat="line in sidebar">>{{line}}</pre>
 				</div>
-				<pre>>{{selection}}</pre>
+				<pre id="selection">>{{selection}}</pre>
 			</div>
 		</div>
 	</main>
 	<script src="js/angular.js"></script>
+	<script src="js/jquery.js"></script>
 	<script src="js/app.js"></script>
 </body>
 </html>

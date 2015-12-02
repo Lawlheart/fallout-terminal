@@ -1,24 +1,25 @@
+
 body {
   background-color: #121;
 }
 #terminal {
-  width:1000px;
+  width:800px;
   margin:40px auto;
-  font-size:30px;
+  font-size:22px;
   font-family: monospace;
   color:#393;
   overflow: auto;
 }
 #terminal-screen {
-	width:700px;
+	width:600px;
 	float:left;
 }
 #terminal-sidebar {
-	width:300px;
+	width:200px;
 	float:right;
 }
 #terminal-history {
-	height:432px;
+	height:416px;
 }
 #terminal-head {
 	margin-bottom: 20px;
@@ -37,4 +38,12 @@ body {
 #terminal-right {
   width: 50%;
   float: right;
+}
+.data, .byte {
+  display:inline;
+}
+
+.data.selected {
+  color:#111;
+  background-color: #393;
 }
