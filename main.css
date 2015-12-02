@@ -1,0 +1,40 @@
+body {
+  background-color: #121;
+}
+#terminal {
+  width:1000px;
+  margin:40px auto;
+  font-size:30px;
+  font-family: monospace;
+  color:#393;
+  overflow: auto;
+}
+#terminal-screen {
+	width:700px;
+	float:left;
+}
+#terminal-sidebar {
+	width:300px;
+	float:right;
+}
+#terminal-history {
+	height:432px;
+}
+#terminal-head {
+	margin-bottom: 20px;
+}
+#terminal pre, #terminal span {
+  margin:0;
+}
+#terminal span {
+  display: inline;
+}
+
+#terminal-left {
+  width: 50%;
+  float:left;
+}
+#terminal-right {
+  width: 50%;
+  float: right;
+}
