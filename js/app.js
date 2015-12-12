@@ -11,6 +11,8 @@ angular.module('FalloutConsole', [])
 			console.log(message)
 		}
 	}
+
+	//randomizes word locations, returns 2d array with paired index and word
 	function findPlaces(words, difficulty, characters, margin) {
 		var places = [];
 		var placed = false;
@@ -39,6 +41,8 @@ angular.module('FalloutConsole', [])
 		debug("PLACED " + places.length + " of " + words.length + " Words")
 		return places.sort(function(a, b) { return a[0] - b[0];});
 	}
+
+	//randomizes junk characters, creating the full grid
 	function generateDisplay(places, difficulty, characters) {
 		var display = '';
 		for(var i = 0; i < characters; i++) {
@@ -51,9 +55,10 @@ angular.module('FalloutConsole', [])
 				display += randomChar();
 			}
 		}
-
 		return display;
 	}
+
+	//gives a random filler character
 	function randomChar() {
 		var fillers = {
 			'1':'(',
@@ -85,6 +90,8 @@ angular.module('FalloutConsole', [])
 		// debug(random, fillers[random.toString()]);
 		return fillers[random.toString()];
 	}
+
+	//takes the whole code string and breaks it into lines
 	function renderScreen(display, lines, lineLength) {
 		var screen = [];
 		for(var i = 0; i < lines; i++) {
@@ -94,17 +101,39 @@ angular.module('FalloutConsole', [])
 		debug(screen);
 		return screen;
 	}
+
+
+	function renderWords(wordKey, difficulty) {
+		debug('adding word class to words, iterating:')
+		debug('renderWords input: ' + wordKey + difficulty)
+		for(var i=0;i<wordKey.length;i++) {
+			var position = parseInt(wordKey[i][0])
+			for(var j=position;j<position + difficulty;j++) {
+				var index = $('.code-line pre.data').eq(j);
+				debug(j, index)
+				index.addClass('word');
+				index.addClass(wordKey[i][1]);
+			}
+		}	
+	}
+
 	var difficulty = 5;
 	var lineLength = 12;
 	var lines = 34;
 	var characters = lineLength * lines;
 	var margin = 2;
+	var wordKey = [];
 
 	var places = findPlaces(words, difficulty, characters, 2);
+	for(var i=0;i<places.length;i++) {
+		wordKey.push(places[i]);
+	}
 	debug(places)
 	display = generateDisplay(places, difficulty, characters);
 	debug(display)
 	$scope.screen = renderScreen(display, lines, lineLength);
+
+
 	debug("screen length: ", $scope.screen.length);
   $scope.left = $scope.screen.slice(0,17);
   $scope.right = $scope.screen.slice(17,34);
@@ -114,21 +143,34 @@ angular.module('FalloutConsole', [])
   $scope.selection ='TEST';
   $scope.number = 0;
 
+  //function to handle selection highlighting
   function changeSelection(num) {
   	$('.selected').removeClass('selected');
   	var selected = $('.code-line pre.data').eq(num);
 	  selected.addClass('selected');
 	  $('#selection').html(">" + selected.html())
+	  if(selected.hasClass('word')) {
+	  	// class is 'data ng-binding word TIRES selected', 21 gets to start of word in this order
+	  	var currentWord = selected[0].className.slice(21, 21 + difficulty);
+	  	$('.' + currentWord).addClass('selected')
+	  }
   }
 
+
+
+  //initializes the cursor to point 0
   $(document).ready(function() {
   	changeSelection($scope.number)
-  });
+		renderWords(wordKey, difficulty)
+  	});
 
+  //keydown event handler to manage cursor
   $('body').keydown(function(e) {
   	debug('keypress');
   	e.preventDefault();
   	var num = $scope.number
+
+  	//keypress right, if not max number
   	if(e.keyCode === 39 && num < 407) {
   		debug('keypress right');
   		//checks if end of row to move to other collumn
@@ -137,6 +179,8 @@ angular.module('FalloutConsole', [])
   		} else {
 	  		$scope.number += 1;
   		}
+
+		//keypress left, if not first number
   	} else if(e.keyCode === 37 && num > 0) {
   		debug('keypress left');  		
   		//checks if end of row to move to other collumn
@@ -145,11 +189,16 @@ angular.module('FalloutConsole', [])
   		} else {
 	  		$scope.number -= 1;
   		}
+
+  	//keypress up, if not first row
   	} else if(e.keyCode === 38 && num > 11) {
   		$scope.number -= 12;
+
+  	//keypress down, if not last row
   	} else if(e.keyCode === 40  && num < 396) {
   		$scope.number += 12;
   	}
+
   	changeSelection($scope.number);
   });
 }]);
