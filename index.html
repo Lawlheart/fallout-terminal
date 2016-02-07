@@ -1,45 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Fallout Terminal</title>
-	<link rel="stylesheet" href="css/animate.css">
-	<link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8">
+  <title>Fallout Terminal</title>
+  <link rel="stylesheet" href="css/animate.css">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body ng-app="FalloutConsole">
-	<main ng-controller="MainController">
-		<div id="terminal">
-			<div id="terminal-head">
-				<pre>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</pre>
-				<pre>!!! WARNING: LOCKOUT IMMINENT !!! 
-				</pre>
-				<pre>{{attempts}} ATTEMPT(S) LEFT: <i ng-repeat="num in boxes">■ </i></pre>
-			</div>
-			<div id="terminal-screen">
-			  <div id="terminal-left">
-			    <span ng-repeat="line in left" class="code-line">
-						<pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
-			    	<br>
-			    </span>
-			  </div>
-			  <div id="terminal-right">
-			    <span ng-repeat="line in right" class="code-line">
-						<pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
-			    	<br>
-			    </span>
-			  </div>
-			</div>
-			<div id="terminal-sidebar">
-				<div id="terminal-history">
-					<pre ng-repeat="line in sidebar">>{{line}}</pre>
-				</div>
-				<pre id="selection">>{{selection}}</pre>
-			</div>
-		</div>
-		<!-- <pre>{{display | json}}</pre> -->
-	</main>
-	<script src="js/angular.js"></script>
-	<script src="js/jquery.js"></script>
-	<script src="js/app.js"></script>
+  <main ng-controller="MainController">
+    <div id="terminal">
+      <div class="landing-view" ng-show="gamestate === 'landing'" ng-cloak>
+        <div id="terminal-head">
+          <pre>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</pre>
+          <br>
+          <pre>Welcome to my Fallout Terminal</pre>
+          <pre>Press Enter to start</pre>
+        </div>
+      </div>
+      <div class="playing-view" ng-show="gamestate === 'playing'" ng-cloak>
+        <div id="terminal-head">
+          <pre>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</pre>
+          <pre>!!! WARNING: LOCKOUT IMMINENT !!! 
+          </pre>
+          <pre>ATTEMPTS REMAINING: <i ng-repeat="num in boxes">■ </i></pre>
+        </div>
+        <div id="terminal-screen">
+          <div id="terminal-left">
+            <span ng-repeat="line in left" class="code-line">
+              <pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
+              <br>
+            </span>
+          </div>
+          <div id="terminal-right">
+            <span ng-repeat="line in right" class="code-line">
+              <pre class="byte">0xF000 </pre><pre class="data">{{line[0]}}</pre><pre class="data">{{line[1]}}</pre><pre class="data">{{line[2]}}</pre><pre class="data">{{line[3]}}</pre><pre class="data">{{line[4]}}</pre><pre class="data">{{line[5]}}</pre><pre class="data">{{line[6]}}</pre><pre class="data">{{line[7]}}</pre><pre class="data">{{line[8]}}</pre><pre class="data">{{line[9]}}</pre><pre class="data">{{line[10]}}</pre><pre class="data">{{line[11]}}</pre>
+              <br>
+            </span>
+          </div>
+        </div>
+        <div id="terminal-sidebar">
+          <div id="terminal-history">
+            <pre ng-repeat="line in sidebar track by $index"><span class="cursor" ng-show="line !== ''">></span>&nbsp;{{line}}</pre>
+          </div>
+          <pre id="selection">></pre>
+        </div>
+      </div>
+      <div class="game-over-view" ng-show="gamestate === 'game-over'" ng-cloak>
+        <div id="terminal-head">
+          <pre>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</pre>
+          <br>
+          <pre>Lockout.</pre>
+          <pre>Press Enter to play again</pre>
+        </div>
+      </div>
+      <div class="game-win-view" ng-show="gamestate === 'game-win'" ng-cloak>
+        <div id="terminal-head">
+          <pre>ROBCO INDUSTRIES (TM) TERMLINK PROTOCOL</pre>
+          <br>
+          <pre>Password Accepted.</pre>
+          <pre>Press Enter to play again</pre>
+        </div>
+      </div>
+    </div>
+    <!-- <pre>{{display | json}}</pre> -->
+  </main>
+  <script src="js/angular.js"></script>
+  <script src="js/jquery.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
