@@ -1,5 +1,5 @@
 #Fallout Terminal
-##### by Kenneth Black
+##### by Kaia
 
 Recreation of the hacking minigame in fallout 4
 
